@@ -1,0 +1,60 @@
+# Copyright Rene Rivra 2015
+# Distributed under the Boost Software License, Version 1.0.
+# (See accompanying file LICENSE_1_0.txt or copy at
+# http://www.boost.org/LICENSE_1_0.txt)
+
+import path ;
+import type ;
+import virtual-target ;
+import regex ;
+import modular ;
+
+project
+	:	requirements
+		<include>../include
+		<toolset>clang:<cxxflags>-std=c++11
+	:	usage-requirements
+		<include>../include
+	;
+
+lib cinder
+	:	[ path.glob-tree ../src/cinder : *.cpp ]
+	:	<tag>@unique-name
+		[ modular.find <use>/boost/assert//library ]
+		[ modular.find <use>/boost/concept_check//library ]
+		[ modular.find <use>/boost/config//library ]
+		[ modular.find <use>/boost/core//library ]
+		[ modular.find <use>/boost/detail//library ]
+		[ modular.find <use>/boost/filesystem//library ]
+		[ modular.find <use>/boost/functional//library ]
+		[ modular.find <use>/boost/integer//library ]
+		[ modular.find <use>/boost/io//library ]
+		[ modular.find <use>/boost/iostreams//library ]
+		[ modular.find <use>/boost/iterator//library ]
+		[ modular.find <use>/boost/logic//library ]
+		[ modular.find <use>/boost/mpl//library ]
+		[ modular.find <use>/boost/predef//library ]
+		[ modular.find <use>/boost/preprocessor//library ]
+		[ modular.find <use>/boost/range//library ]
+		[ modular.find <use>/boost/smart_ptr//library ]
+		[ modular.find <use>/boost/static_assert//library ]
+		[ modular.find <use>/boost/system//library ]
+		[ modular.find <use>/boost/throw_exception//library ]
+		[ modular.find <use>/boost/type_traits//library ]
+		[ modular.find <use>/boost/utility//library ]
+		<warnings>off
+	;
+
+rule unique-name ( name : type ? : property-set )
+{
+	if [ type.is-subtype $(type) OBJ ]
+	{
+		local target = [ $(property-set).get <target> ] ;
+		local action = [ $(target).action ] ;
+		local sources = [ $(action).sources ] ;
+		local name = [ $(sources[1]).name ] ;
+		local key = [ MD5 $(name:D) ] ;
+		return [ virtual-target.add-prefix-and-suffix
+			$(key),$(name:B) : $(type) : $(property-set) ] ;
+	}
+}
