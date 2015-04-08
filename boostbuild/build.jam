@@ -8,41 +8,206 @@ import type ;
 import virtual-target ;
 import regex ;
 import modular ;
+import cast ;
 
 project
 	:	requirements
 		<include>../include
-		<toolset>clang:<cxxflags>-std=c++11
+		[ conditional <toolset>clang :
+			<cxxflags>-std=c++11 <mmflags>-std=c++11 ]
 	:	usage-requirements
 		<include>../include
 	;
 
-lib cinder
-	:	[ path.glob-tree ../src/cinder : *.cpp ]
+alias boost_libs
+	:
+		[ modular.find
+			/boost/algorithm//library
+			/boost/asio//library
+			/boost/array//library
+			/boost/assert//library
+			/boost/assign//library
+			/boost/bind//library
+			/boost/concept_check//library
+			/boost/config//library
+			/boost/container//library
+			/boost/core//library
+			/boost/date_time//library
+			/boost/detail//library
+			/boost/filesystem//library
+			/boost/format//library
+			/boost/function//library
+			/boost/functional//library
+			/boost/function_types//library
+			/boost/geometry//library
+			/boost/integer//library
+			/boost/intrusive//library
+			/boost/io//library
+			/boost/iostreams//library
+			/boost/iterator//library
+			/boost/lexical_cast//library
+			/boost/logic//library
+			/boost/math//library
+			/boost/move//library
+			/boost/mpl//library
+			/boost/multi_index//library
+			/boost/numeric_conversion//library
+			/boost/optional//library
+			/boost/parameter//library
+			/boost/predef//library
+			/boost/preprocessor//library
+			/boost/range//library
+			/boost/rational//library
+			/boost/regex//library
+			/boost/serialization//library
+			/boost/signals2//library
+			/boost/smart_ptr//library
+			/boost/static_assert//library
+			/boost/system//library
+			/boost/throw_exception//library
+			/boost/tokenizer//library
+			/boost/tuple//library
+			/boost/type_index//library
+			/boost/type_traits//library
+			/boost/typeof//library
+			/boost/ublas//library
+			/boost/utility//library
+			/boost/variant//library
+			]
+	:	<link>shared
+	;
+
+lib jsoncpp
+	:	[ path.glob ../src/jsoncpp : *.cpp ]
 	:	<tag>@unique-name
-		[ modular.find <use>/boost/assert//library ]
-		[ modular.find <use>/boost/concept_check//library ]
-		[ modular.find <use>/boost/config//library ]
-		[ modular.find <use>/boost/core//library ]
-		[ modular.find <use>/boost/detail//library ]
-		[ modular.find <use>/boost/filesystem//library ]
-		[ modular.find <use>/boost/functional//library ]
-		[ modular.find <use>/boost/integer//library ]
-		[ modular.find <use>/boost/io//library ]
-		[ modular.find <use>/boost/iostreams//library ]
-		[ modular.find <use>/boost/iterator//library ]
-		[ modular.find <use>/boost/logic//library ]
-		[ modular.find <use>/boost/mpl//library ]
-		[ modular.find <use>/boost/predef//library ]
-		[ modular.find <use>/boost/preprocessor//library ]
-		[ modular.find <use>/boost/range//library ]
-		[ modular.find <use>/boost/smart_ptr//library ]
-		[ modular.find <use>/boost/static_assert//library ]
-		[ modular.find <use>/boost/system//library ]
-		[ modular.find <use>/boost/throw_exception//library ]
-		[ modular.find <use>/boost/type_traits//library ]
-		[ modular.find <use>/boost/utility//library ]
+		<include>../include/jsoncpp
+	;
+explicit jsoncpp ;
+
+lib tess2
+	:	[ path.glob ../src/libtess2 : *.c ]
+	:	<tag>@unique-name
+	;
+explicit tess2 ;
+
+lib z
+	:	[ path.glob ../src/zlib-1.2.3 : *.c ]
+	:	<tag>@unique-name
+	;
+explicit z ;
+
+lib linebreak
+	:	[ path.glob ../src/linebreak : *.c ]
+	:	<tag>@unique-name
+	;
+explicit linebreak ;
+
+lib ant_tweak_bar
+	:	[ cast ant_tweak_bar_mm objective-cpp
+			: [ path.glob ../src/AntTweakBar : *.c *.cpp : *Direct3D*.* ] ]
+		boost_libs
+	:	<tag>@unique-name
+		<target-os>darwin
+		<include>../src/AntTweakBar
+	:
+	:	<include>../src/AntTweakBar
+	;
+explicit ant_tweak_bar ;
+
+lib oggvorbis
+	:	[ path.glob-tree ../src/oggvorbis : *.c ]
+	:	<tag>@unique-name
+		<include>../src/oggvorbis/vorbis
+		<include>../include/oggvorbis
+	:
+	:	<include>../include/oggvorbis
+	;
+explicit oggvorbis ;
+
+lib r8brain
+	:	[ path.glob-tree ../src/r8brain : *.cpp ]
+	:	<tag>@unique-name
+	:
+	:	<include>../src/r8brain
+	;
+explicit r8brain ;
+
+alias cinder_source_common
+	:	[ path.glob ../src/cinder : *.cpp :
+			*Impl*.* Capture*.* Clipboard.cpp Display.cpp Font.cpp
+			ImageSource*.cpp ImageTarget*.cpp Utilities.cpp WinRTUtils.cpp ]
+		[ path.glob ../src/cinder/audio : *.cpp ]
+		[ path.glob-tree ../src/cinder/audio/dsp : *.cpp ]
+		[ path.glob ../src/cinder/gl : *.cpp ]
+		[ path.glob ../src/cinder/ip : *.cpp ]
+		[ path.glob ../src/cinder/params : *.cpp ]
+		[ path.glob ../src/cinder/qtime : *.cpp ]
+		[ path.glob ../src/cinder/svg : *.cpp ]
+	;
+
+alias cinder_source_darwin
+	:	../src/cinder/app/KeyEvent.cpp
+		../src/cinder/audio/cocoa/CinderCoreAudio.cpp
+		../src/cinder/audio/cocoa/ContextAudioUnit.cpp
+		# ../src/cinder/audio/cocoa/DeviceManagerAudioSession.mm
+		../src/cinder/audio/cocoa/DeviceManagerCoreAudio.cpp
+		../src/cinder/audio/cocoa/FileCoreAudio.cpp
+		[ cast cinder_source_darwin_mm objective-cpp :
+			../src/cinder/Capture.cpp
+			../src/cinder/CaptureImplQtKit.mm
+			../src/cinder/Clipboard.cpp
+			../src/cinder/Display.cpp
+			../src/cinder/Font.cpp
+			../src/cinder/ImageSourceFileQuartz.cpp
+			../src/cinder/ImageTargetFileQuartz.cpp
+			../src/cinder/UrlImplCocoa.mm
+			../src/cinder/Utilities.cpp
+			../src/cinder/app/App.cpp
+			../src/cinder/app/AppBasic.cpp
+			../src/cinder/app/AppImplCocoaBasic.mm
+			../src/cinder/app/AppImplCocoaRendererGl.mm
+			../src/cinder/app/AppImplCocoaRendererQuartz.mm
+			../src/cinder/app/CinderView.mm
+			../src/cinder/app/Renderer.cpp
+			../src/cinder/app/Window.cpp
+			../src/cinder/cocoa/CinderCocoa.mm
+			]
+	;
+
+lib cinder
+	:
+		cinder_source_common
+		boost_libs
+		/boost/system//boost_system
+		/boost/filesystem//boost_filesystem
+		ant_tweak_bar/<link>static
+		jsoncpp/<link>static
+		linebreak/<link>static
+		oggvorbis/<link>static
+		r8brain/<link>static
+		tess2/<link>static
+		z/<link>static
+	:
+		<tag>@unique-name
 		<warnings>off
+		<include>../include/jsoncpp
+		<include>../src/linebreak
+		[ conditional <target-os>darwin :
+			<linkflags>"-framework Accelerate"
+			<linkflags>"-framework AppKit"
+			<linkflags>"-framework ApplicationServices"
+			<linkflags>"-framework AudioToolbox"
+			<linkflags>"-framework AudioUnit"
+			<linkflags>"-framework CoreAudio"
+			<linkflags>"-framework CoreGraphics"
+			<linkflags>"-framework CoreServices"
+			<linkflags>"-framework CoreText"
+			<linkflags>"-framework Corevideo"
+			<linkflags>"-framework Foundation"
+			<linkflags>"-framework OpenGL"
+			<linkflags>"-framework QTKit"
+			]
+		<target-os>darwin:<source>cinder_source_darwin
 	;
 
 rule unique-name ( name : type ? : property-set )
