@@ -78,33 +78,33 @@ alias boost_libs
 	;
 
 lib jsoncpp
-	:	[ path.glob ../src/jsoncpp : *.cpp ]
+	:	[ glob-ex ../src/jsoncpp : *.cpp ]
 	:	<tag>@unique-name
 		<include>../include/jsoncpp
 	;
 explicit jsoncpp ;
 
 lib tess2
-	:	[ path.glob ../src/libtess2 : *.c ]
+	:	[ glob-ex ../src/libtess2 : *.c ]
 	:	<tag>@unique-name
 	;
 explicit tess2 ;
 
 lib z
-	:	[ path.glob ../src/zlib-1.2.3 : *.c ]
+	:	[ glob-ex ../src/zlib-1.2.3 : *.c ]
 	:	<tag>@unique-name
 	;
 explicit z ;
 
 lib linebreak
-	:	[ path.glob ../src/linebreak : *.c ]
+	:	[ glob-ex ../src/linebreak : *.c ]
 	:	<tag>@unique-name
 	;
 explicit linebreak ;
 
 lib ant_tweak_bar
 	:	[ cast ant_tweak_bar_mm objective-cpp
-			: [ path.glob ../src/AntTweakBar : *.c *.cpp : *Direct3D*.* ] ]
+			: [ glob-ex ../src/AntTweakBar : *.c *.cpp : *Direct3D*.* ] ]
 		boost_libs
 	:	<tag>@unique-name
 		<target-os>darwin
@@ -115,7 +115,7 @@ lib ant_tweak_bar
 explicit ant_tweak_bar ;
 
 lib oggvorbis
-	:	[ path.glob-tree ../src/oggvorbis : *.c ]
+	:	[ glob-tree-ex ../src/oggvorbis : *.c ]
 	:	<tag>@unique-name
 		<include>../src/oggvorbis/vorbis
 		<include>../include/oggvorbis
@@ -125,7 +125,7 @@ lib oggvorbis
 explicit oggvorbis ;
 
 lib r8brain
-	:	[ path.glob-tree ../src/r8brain : *.cpp ]
+	:	[ glob-tree-ex ../src/r8brain : *.cpp ]
 	:	<tag>@unique-name
 	:
 	:	<include>../src/r8brain
@@ -133,16 +133,16 @@ lib r8brain
 explicit r8brain ;
 
 alias cinder_source_common
-	:	[ path.glob ../src/cinder : *.cpp :
+	:	[ glob-ex ../src/cinder : *.cpp :
 			*Impl*.* Capture*.* Clipboard.cpp Display.cpp Font.cpp
 			ImageSource*.cpp ImageTarget*.cpp Utilities.cpp WinRTUtils.cpp ]
-		[ path.glob ../src/cinder/audio : *.cpp ]
-		[ path.glob-tree ../src/cinder/audio/dsp : *.cpp ]
-		[ path.glob ../src/cinder/gl : *.cpp ]
-		[ path.glob ../src/cinder/ip : *.cpp ]
-		[ path.glob ../src/cinder/params : *.cpp ]
-		[ path.glob ../src/cinder/qtime : *.cpp ]
-		[ path.glob ../src/cinder/svg : *.cpp ]
+		[ glob-ex ../src/cinder/audio : *.cpp ]
+		[ glob-tree-ex ../src/cinder/audio/dsp : *.cpp ]
+		[ glob-ex ../src/cinder/gl : *.cpp ]
+		[ glob-ex ../src/cinder/ip : *.cpp ]
+		[ glob-ex ../src/cinder/params : *.cpp ]
+		[ glob-ex ../src/cinder/qtime : *.cpp ]
+		[ glob-ex ../src/cinder/svg : *.cpp ]
 	;
 
 alias cinder_source_darwin
