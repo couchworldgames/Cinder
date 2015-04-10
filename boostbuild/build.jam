@@ -17,6 +17,8 @@ project
 			<cxxflags>-std=c++11 <mmflags>-std=c++11 ]
 	:	usage-requirements
 		<include>../include
+		[ conditional <toolset>clang :
+			<cxxflags>-std=c++11 <mmflags>-std=c++11 ]
 	;
 
 alias boost_libs
