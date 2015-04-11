@@ -180,8 +180,9 @@ lib cinder
 	:
 		cinder_source_common
 		boost_libs
-		/boost/system//boost_system
-		/boost/filesystem//boost_filesystem
+		[ modular.find
+    		/boost/system//boost_system
+    		/boost/filesystem//boost_filesystem ]
 		ant_tweak_bar/<link>static
 		jsoncpp/<link>static
 		linebreak/<link>static
